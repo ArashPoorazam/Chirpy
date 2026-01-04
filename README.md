@@ -1,2 +1,3 @@
 # Chirpy
-Backend http server
+Backend http server as traning.
+In development...
