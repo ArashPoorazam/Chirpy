@@ -10,9 +10,14 @@ func main() {
 	const port = "8080"
 
 	mux := http.NewServeMux()
+	fileServerHandler := http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot)))
+	cfg := &apiConfig{}
 
 	// handlers
-	mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
+	mux.Handle("/app/", cfg.middlewareCount(fileServerHandler))
+	mux.HandleFunc("GET /admin/metrics", cfg.metricHits)
+	mux.HandleFunc("POST /api/reset", cfg.resetHits)
+	mux.HandleFunc("GET /api/healthz", handleHealthz)
 
 	srv := &http.Server{
 		Addr:    ":" + port,
